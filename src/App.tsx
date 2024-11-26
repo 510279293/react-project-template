@@ -1,10 +1,15 @@
-import { router } from '@/router'
-import { Link, RouterProvider } from 'react-router-dom'
+import { Provider } from 'react-redux'
+import { AppRouterProvider } from '@/router'
+import { Init as AppInit } from './components'
+import store from './store'
 
 function App() {
-  return (<div>
-    <RouterProvider router={router} />
-  </div>)
+  return (<Provider store={store}>
+    <AppInit>
+      <AppRouterProvider />
+    </AppInit>
+  </Provider>
+  )
 }
 
 export default App

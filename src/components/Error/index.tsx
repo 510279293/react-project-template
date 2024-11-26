@@ -1,5 +1,5 @@
 export default function Error (){
     return (<div>
-       error page
+       暂无此页面
     </div>)
 }

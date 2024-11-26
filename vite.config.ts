@@ -12,16 +12,18 @@ export default defineConfig({
   server: {
     proxy: {
       // ----------- 请求本地，代理至服务端
-      '/cloud_manage': {
-          // target: 'http://192.168.2.184:9191/', 
-          target: `http://192.168.8.146:9191`, 
-          // target: 'http://localhost:9191/', 
+      '/cloudy_manage': {
+          // 测试环境
+          target: `http://192.168.8.146:9486`, 
+          // target: `http://192.168.3.251:9486`, 
+          // 开发环境
+          // target: 'http://localhost:9486/', 
           ws: false,
           changeOrigin: true
         },
       // ----------- 请求本地，代理至dvm文件服务
       '/dvm-upload': {
-        target: 'http://192.168.8.145:8080/', 
+        target: 'http://192.168.8.162:8080/', 
         // target: 'http://localhost/',
         ws: false,
         changeOrigin: true
