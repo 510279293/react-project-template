@@ -3,7 +3,6 @@ import { useLocation, useSearchParams } from 'react-router-dom'
 
 export * from './plusTableHook'
 export * from './initHook'
-export * from './dictionary'
 export * from './auth'
 
 

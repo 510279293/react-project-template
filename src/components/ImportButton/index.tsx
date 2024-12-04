@@ -1,12 +1,10 @@
 import { message, Modal, Row } from "antd"
 import React, { useRef, useState } from "react"
-import { useSelector } from "react-redux"
 import type { ModalFormProps, ProFormInstance } from '@ant-design/pro-form' 
 import ProForm, { ModalForm,  ProFormUploadDragger, } from '@ant-design/pro-form';
 import { productApi, getToken, toFormData } from "@/utils"
 import { request } from "@/plugins"
-import config from '../../../project.config'
-import FormData from "form-data";
+import config from '@/project.config'
 import { useRequest } from "ahooks";
 import { userGetTemplates } from "@/api";
 

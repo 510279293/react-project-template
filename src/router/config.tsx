@@ -1,20 +1,21 @@
 import { DashBoard, Login, OverView, Register } from "@/pages";
-import { Navigate, Outlet, RouteProps, RouterProps } from "react-router-dom";
-import { Address, BaseInfo, Certification, Partner } from "@/pages/userCenter/account";
-import { Station } from "@/pages/userCenter/message";
+import { RouteProps } from "react-router-dom";
+import Account, { Address, BaseInfo, Certification, Partner } from "@/pages/userCenter/account";
+import Message, { Station } from "@/pages/userCenter/message";
 import React, { Suspense } from "react";
 import Demo from "@/components/Demo";
 import ProTableDemo from "@/components/Demo/ProTable";
 import { 
-    Role, Dictionary,
-    default as System
+    Role, Dictionary, Organization,
+    default as System,
 } from "@/pages/system";
 
-import Human from "@/components/Demo/DigitalMan";
 import PersonalCertification from "@/pages/userCenter/account/certification/personal";
 import CompanyCertification from "@/pages/userCenter/account/certification/company";
 import Poker from "@/components/Demo/Poker";
 import Chat from "@/components/Demo/Chat";
+import Manage, { UserManage } from "@/pages/manage";
+import UserCenter from "@/pages/userCenter";
 
 export type MenuItem = {
     path: string;       // 路由路径
@@ -64,11 +65,6 @@ const DemoRoutes: MenuItem[] = [
                 element: <ProTableDemo />
             },
             {
-                path: "/demo/sdk",
-                name: '华为数字人',
-                element: <Human />
-            },
-            {
                 path: "/demo/poker",
                 name: '扑克牌',
                 element: <Poker />
@@ -110,17 +106,28 @@ const DashBoardRoutes: MenuItem[] = [
     }
 ]
 
-// 云管服务
-const CloudServiceRoutes: MenuItem[] = [
+// 用户管理
+const UserManageRoutes: MenuItem[] = [
     {
-        path: '/cloudService',
+        path: '/user',
+        name: '用户管理',
+        authCode: -1,
+        element: <UserManage />
+    }
+]
+
+// 云管服务
+const ManageRoutes: MenuItem[] = [
+    {
+        path: '/manage',
         name: '运营服务',
         authCode: -1,
-        element: <Outlet />,
+        element: <Manage />,
         children: createRouter([
             ...OverViewRoutes,
             ...DashBoardRoutes,
-        ], {basename: '/cloudService'})
+            ...UserManageRoutes,
+        ], {basename: '/manage'})
     }
 ]
 
@@ -144,6 +151,12 @@ const SystemRoutes: MenuItem[] = [
                 // authCode: 888,
                 element: <Dictionary />
             },
+            {
+                path: '/organization',
+                name: '组织架构',
+                // authCode: 888,
+                element: <Organization />
+            }
         ], {basename: '/system'})
     }
 ]
@@ -155,7 +168,7 @@ const AccountCenterRoutes: MenuItem[] = [
         path: '/account',
         name: '账号中心',
         authCode: -1,
-        element: <Outlet />,
+        element: <Account />,
         children: [
             {
                 path: '/account/baseInfo',
@@ -205,7 +218,7 @@ const MessageRoutes: MenuItem[] = [
         path: '/message',
         name: '消息',
         authCode: -1,
-        element: <Outlet />,
+        element: <Message />,
         children: [
             {
                 path: '/message/station',
@@ -223,7 +236,7 @@ const UserCenterRoutes: MenuItem[] = [
         path: '/userCenter',
         name: '客户中心',
         authCode: -1,
-        element: <Outlet />,
+        element: <UserCenter />,
         children: createRouter([...AccountCenterRoutes, ...MessageRoutes], {basename: '/userCenter'})
     }
 ]
@@ -231,7 +244,7 @@ const UserCenterRoutes: MenuItem[] = [
 // 页头顶部一级菜单
 export const TopMenuRoutes: MenuItem[] = [
     ...SystemRoutes,
-    ...CloudServiceRoutes,
+    ...ManageRoutes,
     ...UserCenterRoutes
 ]
 
@@ -244,7 +257,7 @@ export const staticRoutes: MenuItem[] = [
 
 // 动态路由（受权限管控的）
 export const dynamicRoutes: MenuItem[] = [
-    ...CloudServiceRoutes,
+    ...ManageRoutes,
     ...UserCenterRoutes,
     ...SystemRoutes
 ]

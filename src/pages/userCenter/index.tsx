@@ -1,3 +1,9 @@
-import { Outlet } from "react-router-dom";
+// import { Outlet } from "@/components";
 
-export default Outlet
+import { Outlet } from "react-router-dom"
+
+function UserCenter() {
+    return <Outlet />
+}
+
+export default UserCenter

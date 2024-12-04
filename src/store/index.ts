@@ -1,8 +1,7 @@
 import { applyMiddleware, createStore } from "redux"
 import { thunk } from "redux-thunk";
 import reducer from "./reducer"
-import { Key } from "react";
-import { SelectProps, TreeDataNode, TreeProps } from "antd";
+import { TreeProps } from "antd";
 
 // 用户信息
 export type UserInfo = {
@@ -14,30 +13,16 @@ export type UserInfo = {
     routes?: any[];          // 用户所具有的权限路由信息
 }
 
-// 产品树
-// type ProductItem = {
-//     title?: string;
-//     key?: Key;
-//     type?: any;
-//     label?: string;
-//     value?: Key;
-//     children?: ProductItem[]
-// }
-
-type ProductItem = TreeDataNode
-
-type ProviderList = SelectProps['options']
-
 export type StateType = {
     userInfo: UserInfo; // 用户信息
-    productTree: ProductItem[]; // 产品树
-    providerList: ProviderList; // 厂商
+    orgTree: TreeProps['treeData']; // 组织架构树
+    cacheKey?: string[]; // 缓存页面
 }
 
 const initialState: StateType = {
     userInfo: {},
-    productTree: [],
-    providerList: []
+    orgTree: [],
+    cacheKey: []
 }
 
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore)

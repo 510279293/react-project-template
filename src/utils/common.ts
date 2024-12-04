@@ -21,7 +21,7 @@ export const dvmOptions = (data: any, field: string) => data?.uiFunctionEnum?.[f
 
 export const productApi = (fn: any) => {
   return async (param: any, showMsg = true, successCB?: any) => {
-      const { current: pageCurrent, ...rests } = param
+      const { current: pageCurrent, ...rests } = (param || {})
       // 如果参数不是对象  会被转换为对象  所以添加判断
       const { msg, success, data, ...rest } = await fn(pageCurrent ? {pageCurrent, ...rests} : param)
       const type = success ? 'success' : 'error'
@@ -46,27 +46,42 @@ export function toFormData(data: any) {
 }
 
 // 处理公共树结构
-export const handleCommonTreeData = (treeData: any, handleItem: (v: any) => object) => {
+
+export const handleCommonTreeData = (treeData: any, handleItem: (v: any) => object| boolean) => {
   const allLeafArr: any[] = []
   const flatArr: any[] = []
   const newTreeData: any = []
-  const deps = (data: any[], newTreeData: any[]) => (data||[]).forEach((v, i) => {
+  const copyTreeData = JSON.parse(JSON.stringify(treeData))
+
+  const deps = (data: any[], newTreeData: any[]) => (data||[])?.filter((v, i) => {
       const { children } = v
-      v = (handleItem && handleItem(v)) || v
+      const newV = handleItem?.(v)
+      const isFilter = typeof newV === 'boolean'
+      if (isFilter) {
+        flatArr.push(v)
+        if (children && children.length) {
+          v.children = deps(children||[], v.children)
+        } else {
+          allLeafArr.push(v)
+        }
+        return newV
+      }
+      v = isFilter ? v : newV
       flatArr.push(v)
       newTreeData[i] = v
-      newTreeData[i].children = children
+      newTreeData[i].children = children||[]
       if (children && children.length) {
           deps(children||[], v.children)
       } else {
           allLeafArr.push(v)
       }
   })
-  deps(treeData, newTreeData)
+  const filterTreeData = deps(copyTreeData, newTreeData)
   return {
       treeData,
       newTreeData,
       flatArr,
-      allLeafArr
+      allLeafArr,
+      filterTreeData
   }
 }

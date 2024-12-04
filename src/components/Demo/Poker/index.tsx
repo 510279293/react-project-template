@@ -80,7 +80,7 @@ const Poker = () => {
     }, [])
     
     return (<div style={{width: '100vw', height: '100vh', overflow: 'hidden', display: 'flex', justifyContent: 'center', alignItems: 'center', background: 'green'}}>
-        <div style={{width: 600, height: 600, position: 'relative', background: 'pink'}}>
+        <div style={{width: 600, height: 600, position: 'relative',}}>
             {players.map((player: any, i: number) => {
                 const { cards } = player
                 const width = ((cards.length - 1) * 22 + 46)

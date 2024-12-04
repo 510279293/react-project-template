@@ -5,11 +5,10 @@ import store from './store'
 
 function App() {
   return (<Provider store={store}>
-    <AppInit>
-      <AppRouterProvider />
-    </AppInit>
-  </Provider>
-  )
+            <AppInit>
+              <AppRouterProvider />
+            </AppInit>
+          </Provider>)
 }
 
 export default App

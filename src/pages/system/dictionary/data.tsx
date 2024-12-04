@@ -1,4 +1,4 @@
-import { ProColumns } from "@ant-design/pro-table";
+import { ProTableModalFormProps } from "@/components/ProTablePlus";
 
 export type TableListItem = {
     createTime: string;
@@ -8,9 +8,9 @@ export type TableListItem = {
     status: string;
 };
 
-export type OperateActionType = '配置选项' | '编辑' 
+export type OperateActionType = 'add' | 'update' | 'del'  
 
-export const columnsFn: (operate: any, hasPermission?: any) => ProColumns<TableListItem>[] = (operate, hasPermission) => {
+export const columnsFn: ProTableModalFormProps['columns'] = ({operate, hasPermission}) => {
     return [
             {
                 title: '字典名称',
@@ -18,13 +18,13 @@ export const columnsFn: (operate: any, hasPermission?: any) => ProColumns<TableL
                 // fixed: 'left',
                 // order: 100,
                 hideInSearch: true,
-                width: 200,
+                width: 100,
                 // fieldProps: {placeholder: '请输入字典名称'}
             },
             {
                 title: '选项名称',
                 dataIndex: 'optionName',
-                width: 200,
+                width: 100,
                 order: 2,
             },
             {
@@ -37,7 +37,7 @@ export const columnsFn: (operate: any, hasPermission?: any) => ProColumns<TableL
                     1: { text: '启用', }
                 },
                 search: {
-                    transform: (value) => {
+                    transform: (value: any) => {
                         return {
                             status: value,
                         };
@@ -49,14 +49,14 @@ export const columnsFn: (operate: any, hasPermission?: any) => ProColumns<TableL
                 dataIndex: 'createTime',
                 // valueType: 'dateRange',
                 hideInSearch: true,
-                width: 200,
+                width: 100,
                 fieldProps: { allowEmpty: [true, true]},
                 search: {
-                    transform: (value) => {
-                    return {
-                        startTime: value[0],
-                        endTime: value[1],
-                    };
+                    transform: (value: any) => {
+                        return {
+                            startTime: value[0],
+                            endTime: value[1],
+                        };
                     },
                 },
             },
@@ -67,7 +67,7 @@ export const columnsFn: (operate: any, hasPermission?: any) => ProColumns<TableL
                 width: 100,
                 // fixed: 'right',
                 render: (text, record) => [
-                    hasPermission(-1) ? <a key="edit" onClick={() => operate && operate('编辑', record)}>编辑</a> : null,
+                    hasPermission(-1) ? <a key="edit" onClick={() => operate?.('update', record)}>编辑</a> : null,
                 // <DragHandle key="drag" /> 
                 ],
             },

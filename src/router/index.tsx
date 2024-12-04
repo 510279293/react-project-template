@@ -1,22 +1,17 @@
-import { BrowserRouter, Outlet, Route, RouterProvider, Routes, createBrowserRouter, matchPath, useLoaderData, useRoutes } from "react-router-dom";
-import { Permission, Error, Layout, Lazy } from "@/components"; 
+import { RouterProvider, createBrowserRouter, matchPath } from "react-router-dom";
+import { Error, Lazy, Auth } from "@/components"; 
 import { MenuItem, dynamicRoutes, staticRoutes } from "./config";
 import { flattenTree, isEmptyArray } from "@/utils";
-import { useRequest } from "ahooks";
-import React, { Suspense, lazy, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { StateType } from "@/store";
-import { Login } from "@/pages";
 
 // const Auth = () => (<Permission><Layout><Outlet /></Layout></Permission>)
-const Auth2 = () => (<Layout><Permission><Outlet /></Permission></Layout>)
+// const Auth2 = () => (<Layout><Permission><Outlet /></Permission></Layout>)
 
 // 
 const routes: any = [
     ...staticRoutes,
     {
         path: "/",
-        element: <Auth2 />,
+        element: <Auth />,
         errorElement: <Error />,
         children: [
             ...dynamicRoutes
@@ -29,7 +24,7 @@ export const getRouters = (userRoutes?: any[]) => {
         ...staticRoutes,
         {
             path: "/",
-            element: <Auth2 />,
+            element: <Auth />,
             errorElement: <Error />,
             // children: [ ...dynamicRoutes ],
             children: handleDynamicRoutes(userRoutes || dynamicRoutes || [])

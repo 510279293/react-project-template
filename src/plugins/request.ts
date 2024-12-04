@@ -1,5 +1,5 @@
 import createRequest from '@junc/request'
-import config from '../../project.config'
+import config from '@/project.config'
 import { getToken, removeToken } from '@/utils'
 import { message } from 'antd'
 import { stringify } from 'qs'

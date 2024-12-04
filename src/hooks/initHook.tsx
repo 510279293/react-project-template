@@ -1,5 +1,5 @@
 import { asyncSetUserInfo } from "@/store/action";
-import { asyncSetProductTree } from "@/store/action/common";
+import { asyncSetOrgTree } from "@/store/action/common";
 import { getToken } from "@/utils";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
@@ -9,8 +9,8 @@ export const useInitHook = () => {
     const isLogin = getToken() // 判断是否登录
     useEffect(() => {
         if (isLogin) {
-            dispatch(asyncSetUserInfo())
-            dispatch(asyncSetProductTree())
+            dispatch(asyncSetUserInfo()) // 获取用户信息
+            dispatch(asyncSetOrgTree())  // 获取组织架构树
         }
     }, [isLogin])
 }

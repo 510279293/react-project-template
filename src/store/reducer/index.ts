@@ -3,10 +3,12 @@ import {
     userInfoReducer as userInfo,
 } from './userInfo'
 import {
-    productTreeReducer as productTree
+    orgTreeReducer as orgTree,
+    cacheKeyReducer as cacheKey
 } from './common'
 
 export default combineReducers<unknown>({
     userInfo,
-    productTree
+    orgTree,
+    cacheKey
 })

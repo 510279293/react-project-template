@@ -1,4 +1,4 @@
-import config from '../../project.config'
+import config from '@/project.config'
 
 const { TOKENKEY } = config
 /**

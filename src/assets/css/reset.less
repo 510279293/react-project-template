@@ -6,6 +6,9 @@ em{font-style:normal}
 li{list-style:none} 
 img{border:0;vertical-align:middle} 
 table{border-collapse:collapse;border-spacing:0} 
+a{
+    color: #1677ff;
+}
 p{word-wrap:break-word}
 .cl:after{
     content:"";
@@ -18,11 +21,13 @@ p{word-wrap:break-word}
 .cl{
     zoom:1;
 }
-.Flex{
-	display: flex;
-	display: -webkit-box; 
-	display: -moz-box; 
-	display: -webkit-flex; 
-	display: -moz-flex; 
-	display: -ms-flexbox; 
+
+.junc{
+    &-ant-tree-no-children{
+        .ant-tree-treenode{
+            .ant-tree-switcher{
+                display:none;
+            }
+        }
+    }
 }

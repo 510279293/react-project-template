@@ -1,8 +1,9 @@
-import { ActionType, ModalFormProps, } from "@ant-design/pro-components"
+import { ActionType, ModalFormProps, ProTableProps, } from "@ant-design/pro-components"
 import { useRef, useState } from "react"
 import { Modal, Table } from "antd"
 import useAntdResizableHeader, { OptionsType } from "use-antd-resizable-header"
 
+type TableActionType = 'add' | 'update' | 'del' | any
 function createResizableHeaderColumnsState(columnsState?: OptionsType['columnsState']): OptionsType['columnsState'] {
     if (columnsState) return columnsState
     const { pathname, search } = location
@@ -21,10 +22,11 @@ interface MoalProps extends ModalFormProps{
 type useModalHookProps = {
     updateApi?: any;
     addApi?: any;
+    delApi?: any;
     getInfoApi?: any;
     callBack?: () => void;
 }
-export const useModalHook = ({ callBack, addApi, updateApi, getInfoApi }: useModalHookProps) => {
+export const useModalHook = ({ callBack, addApi, updateApi, delApi, getInfoApi }: useModalHookProps) => {
     const [modalProps, setModalProps] = useState<MoalProps>({
         visible: false, 
         title: '新增', 
@@ -39,7 +41,6 @@ export const useModalHook = ({ callBack, addApi, updateApi, getInfoApi }: useMod
 
     // 关闭弹窗
     const closeModal = () => setModalProps({...modalProps, visible: false})
-    
 
     // 新增操作
     const addAction = (params?: any) => setModalProps({
@@ -59,23 +60,49 @@ export const useModalHook = ({ callBack, addApi, updateApi, getInfoApi }: useMod
         onFinish: updateApi ? (values: any) => updateApi?.({...values, ...params?.params}, true, onSuccess) : undefined,
         ...params
     })
+
+    // 删除操作
+    const delAction = (params: any) => Modal.confirm({
+        title: '确认要删除该数据吗?',
+        content: '删除后当前内容将永久删除，不可恢复。',
+        okText: '确认',
+        cancelText: '取消',
+        onOk: async() => {
+            await delApi?.(params, true, onSuccess)
+        },
+    });
+
+    const createAction = (action: TableActionType, params?: any) => {
+        switch (action) {
+            case 'add':
+                return addAction(params)
+            case 'update':
+                return editAction(params)
+            case 'del':
+                return delAction(params)
+            default:
+        }
+    }
+
     return {
         modalProps,
         setModalProps,
         addAction,
         editAction,
-        onSuccess
+        delAction,
+        onSuccess,
+        createAction
     }
 }
 
 type useProTableHookProps = {
     // columnsFn: any;
     // operate?: (action: string, record: any) => void;
-    delApi?: (params: any, showMsg: boolean, callBack?: () => void) => void;
-    columns: any;
+    // delApi?: (params: any, showMsg: boolean, callBack?: () => void) => void;
+    columns?: ProTableProps<any, any>['columns'];
     resizableHeaderColumnsState?: OptionsType['columnsState']
 }
-const useProTableHook = ({delApi, columns, resizableHeaderColumnsState }: useProTableHookProps) => {
+export const useProTableHook = ({ columns, resizableHeaderColumnsState }: useProTableHookProps) => {
     const formRef = useRef<any>(null)
     const actionRef = useRef<ActionType>(null); 
     const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -88,15 +115,15 @@ const useProTableHook = ({delApi, columns, resizableHeaderColumnsState }: usePro
 
     const { components, resizableColumns } = useAntdResizableHeader({ columns, columnsState: createResizableHeaderColumnsState(resizableHeaderColumnsState), });
 
-    const delAction = (params: any) => Modal.confirm({
-        title: '确认要删除该数据吗?',
-        content: '删除后当前内容将永久删除，不可恢复。',
-        okText: '确认',
-        cancelText: '取消',
-        onOk: async() => {
-            await delApi?.(params, true, onRefresh)
-        },
-    });
+    // const delAction = (params: any) => Modal.confirm({
+    //     title: '确认要删除该数据吗?',
+    //     content: '删除后当前内容将永久删除，不可恢复。',
+    //     okText: '确认',
+    //     cancelText: '取消',
+    //     onOk: async() => {
+    //         await delApi?.(params, true, onRefresh)
+    //     },
+    // });
 
     const getQueryParams = (otherParams?: Record<string, any>) => {
         return {
@@ -106,7 +133,7 @@ const useProTableHook = ({delApi, columns, resizableHeaderColumnsState }: usePro
     }
     
     const getDvmExportParams = (otherParams?: Record<string, any>) => {
-        const showInTableColumns = resizableColumns.filter(column => (!column.hideInTable && !['option'].includes(column.valueType)))
+        const showInTableColumns = resizableColumns?.filter(column => (!column.hideInTable && !['option'].includes(column?.valueType as any)))
         return {
             ...formRef.current?.getFieldsFormatValue(),
             fields: showInTableColumns.map(column => column.dataIndex).toString(),
@@ -121,7 +148,7 @@ const useProTableHook = ({delApi, columns, resizableHeaderColumnsState }: usePro
         getQueryParams,
         getDvmExportParams,
         onRefresh,
-        delAction,
+        // delAction,
         pagination,
         components,
         columns: resizableColumns,
@@ -163,7 +190,6 @@ export const usePlusTableHook = ({
         actionRef,
         formRef,
         onRefresh, 
-        delAction, 
         getQueryParams,
         getDvmExportParams,
         pagination, 
@@ -172,7 +198,6 @@ export const usePlusTableHook = ({
         rowSelection,
         selectedRowKeys
     } = useProTableHook({
-        delApi, 
         columns, 
         resizableHeaderColumnsState
     })
@@ -183,10 +208,13 @@ export const usePlusTableHook = ({
         onSuccess,
         addAction,
         editAction,
+        delAction,
+        createAction
     } = useModalHook({
         updateApi,
         addApi,
         getInfoApi,
+        delApi,
         callBack: onRefresh
     })
 
@@ -210,6 +238,7 @@ export const usePlusTableHook = ({
         addAction,       // 调用新增弹窗，本质就是调用 setModalProps 方法
         editAction,      // 调用编辑弹窗，本质就是调用 setModalProps 方法
         delAction,       // 调用删除弹窗，成功后自动执行 onRefresh 回调
-        onRefresh        // 表格数据的 刷新方法
+        onRefresh,        // 表格数据的 刷新方法
+        createAction
     }
 }

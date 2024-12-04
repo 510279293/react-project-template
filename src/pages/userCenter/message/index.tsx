@@ -1,5 +1,11 @@
+// import { Outlet } from '@/components';
+
 import { Outlet } from 'react-router-dom';
 
 export { default as Station } from './station';
 
-export default Outlet
+function Message() {
+    return <Outlet />
+}
+
+export default Message

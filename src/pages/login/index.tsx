@@ -301,7 +301,7 @@ const LoginPage = () => {
       const { data, success, msg } = await whichApi(values, false)
       if (success) {
         setToken(data?.token)
-        navigate('/cloudService/overview')
+        navigate('/manage/overview')
       }
     }
     return (

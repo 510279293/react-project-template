@@ -1,13 +1,23 @@
 import { StateType } from "..";
-import { ProductTreeAction } from "../action";
-import { SET_PRODUCT_TREE } from "../contants";
+import { CacheKeyAction, OrgTreeAction } from "../action";
+import { SET_CACHE_KEY, SET_ORG_TREE } from "../contants";
 
-export function productTreeReducer(preProductTree: StateType['productTree'] = [], action: ProductTreeAction): StateType['productTree'] {
-    const { productTree, type } = action
+export function orgTreeReducer(preOrgTree: StateType['orgTree'] = [], action: OrgTreeAction): StateType['orgTree'] {
+    const { orgTree, type } = action
     switch (type) {
-        case SET_PRODUCT_TREE: 
-            return productTree
+        case SET_ORG_TREE: 
+            return orgTree
         default:
-            return preProductTree
+            return preOrgTree
+    }
+}
+
+export function cacheKeyReducer(preCacheKey: StateType['cacheKey'] = [], action: CacheKeyAction): StateType['cacheKey'] {
+    const { cacheKey, type } = action
+    switch (type) {
+        case SET_CACHE_KEY: 
+            return cacheKey
+        default:
+            return preCacheKey
     }
 }

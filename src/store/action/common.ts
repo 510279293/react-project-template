@@ -1,42 +1,36 @@
-import { userInfo as userInfoApi } from "@/api/user";
 import { StateType } from ".."
-import { SET_PRODUCT_TREE, SET_PROVIDERLIST } from "../contants"
+import { SET_ORG_TREE, SET_CACHE_KEY } from "../contants"
 import { Dispatch } from "redux";
-import { getAllProductTree, getAllProvider } from "@/api/common";
 import { handleCommonTreeData } from "@/utils/common";
+import { sysOrgTree } from "@/api";
 
-export type ProductTreeAction = {
-    type: typeof SET_PRODUCT_TREE;
-    productTree: StateType['productTree'];
+export type OrgTreeAction = {
+    type: typeof SET_ORG_TREE;
+    orgTree: StateType['orgTree'];
 }
 
-export type ProviderListAction = {
-    type: typeof SET_PROVIDERLIST;
-    providerList: StateType['providerList'];
+export type CacheKeyAction = {
+    type: typeof SET_CACHE_KEY;
+    cacheKey: StateType['cacheKey'];
 }
 
-export function setProductTree(productTree: StateType['productTree'] = []): ProductTreeAction {
+export function setOrgTree(orgTree: StateType['orgTree'] = []): OrgTreeAction {
     return {
-        type: SET_PRODUCT_TREE,
-        productTree
+        type: SET_ORG_TREE,
+        orgTree
     }
 }
 
-export function setProviderList(providerList: StateType['providerList'] = []): ProviderListAction {
+export function setCacheKey(cacheKey: StateType['cacheKey'] = []): CacheKeyAction {
     return {
-        type: SET_PROVIDERLIST,
-        providerList
+        type: SET_CACHE_KEY,
+        cacheKey
     }
 }
 
-export const asyncSetProductTree = () => async (dispatch: Dispatch) => {
-    const { data } = await getAllProductTree()
-    const { newTreeData } = handleCommonTreeData(data, (item) => ({type: item.type, id: item.id, title: item.name, key: `${item.type}-${item.id}`, label: item.name, value: `${item.type}-${item.id}`}))
-    dispatch(setProductTree(newTreeData||[]))
+export const asyncSetOrgTree = () => async (dispatch: Dispatch) => {
+    const { data } = await sysOrgTree()
+    const { newTreeData } = handleCommonTreeData(data, ({whetherUser, id, name, ...rest}) => ({title: name, key: `${whetherUser ? 'u' : 'd'}-${id}`, label: name, value: `${whetherUser ? 'u' : 'd'}-${id}`, whetherUser, id, name, ...rest}))
+    dispatch(setOrgTree(newTreeData||[]))
 }
 
-
-export const asyncSetProviderList = () => async (dispatch: Dispatch) => {
-    // const { data } = await getAllProvider()
-    // dispatch(setProductTree(newTreeData||[]))
-}
